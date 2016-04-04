@@ -40,18 +40,18 @@ cranvmod <- glm(data=rxViolations, formula=violations ~ month_of_year +
 
 vt <- rxDTree(violation_type ~ work_zone + vehicletype + race + gender + day_of_week + hour_of_day, data=rxViolations);
 
+# Get Montgomery County geocode first to get the map for it
+montgomery_county_gc <- geocode("Montgomery County, MD")
+
+# Now, get the actual map
+montgomery_county_map <- get_map(location = c(montgomery_county_gc$lon, montgomery_county_gc$lat))
+
 # Showing shades of colors using an abs function
 alldata$circadian <- abs(alldata$hour_of_day - 12)
 # Using default colors
 ggmap(montgomery_county_map) + geom_point(data=sampledata, aes(longitude, latitude, color=circadian))
 # Using choice of colors. terrain.colors results in brightly colored chart
 ggmap(montgomery_county_map) + geom_point(data=alldata, aes(longitude, latitude, color=circadian)) + scale_color_gradientn(colors=terrain.colors(12))
-
-# Get Montgomery County geocode first to get the map for it
-montgomery_county_gc <- geocode("Montgomery County, MD")
-
-# Now, get the actual map
-montgomery_county_map <- get_map(location = c(montgomery_county_gc$lon, montgomery_county_gc$lat))
 
 
 # Plotting for a month. The sin function is to attempt to match
